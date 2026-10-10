@@ -200,10 +200,11 @@ def main():
             snake.reset()
             screen.fill(BOARD_BACKGROUND_COLOR)
 
+        score = snake.length - 1
+        speed = snake.get_speed()
         # Обновляем заголовок окна
         pygame.display.set_caption(
-            f'Змейка | Яблок: {snake.length - 1} | '
-            f'Скорость: {snake.get_speed()}'
+            f'Змейка | Яблок: {score} | Скорость: {speed}'
         )
 
         snake.draw()
