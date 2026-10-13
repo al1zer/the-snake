@@ -1,6 +1,6 @@
 """«Piton»"""
 
-from random import randint
+from random import choice, randint
 
 import pygame as pg
 
@@ -60,7 +60,6 @@ class GameObject:
 
     def draw(self):
         """Отрисовывает объект. Переопределяется в дочерних."""
-        pass
 
 
 class Apple(GameObject):
@@ -71,21 +70,18 @@ class Apple(GameObject):
         occupied_positions — занятые клетки
         """
         super().__init__(body_color=APPLE_COLOR)
-        self.randomize_position(occupied_positions)
+        self.randomize_position(occupied_positions or [])
 
     def randomize_position(self, occupied_positions=None):
         """Устанавливает случайную позицию яблока на поле,
         исключая координаты занятые змейкой
         """
-        if occupied_positions is None:
-            occupied_positions = []
         while True:
-            position = (
+            self.position = (
                 randint(0, GRID_WIDTH - 1) * GRID_SIZE,
                 randint(0, GRID_HEIGHT - 1) * GRID_SIZE,
             )
-            if position not in occupied_positions:
-                self.position = position
+            if self.position not in occupied_positions:
                 break
 
     def draw(self):
@@ -102,6 +98,7 @@ class Snake(GameObject):
         """Создаёт змейку в начальном состоянии."""
         super().__init__(body_color=SNAKE_COLOR)
         self.reset()
+        self.direction = RIGHT
 
     def update_direction(self):
         """Обновление положения змеи"""
@@ -130,8 +127,8 @@ class Snake(GameObject):
     def reset(self):
         """Возвращает змею в начальное состояние."""
         self.length = 1
-        self.positions = [(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)]
-        self.direction = RIGHT
+        self.positions = [self.position]
+        self.direction = choice([UP, DOWN, LEFT, RIGHT])
         self.next_direction = None
         self.last = None
 
